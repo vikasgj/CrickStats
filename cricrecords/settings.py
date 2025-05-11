@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-y7r0cgb*kb@8sayn5yoo7sxl=tevgz%3vw44mkb*dm3bs(ld-8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['crickstats.onrender.com', 'yourdomain.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
