@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Highest Individual Scores</title>
+
+    <!-- GSAP and AOS Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #ffcc00;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .search-filters {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        label, select, input, button {
+            font-size: 1rem;
+            margin-right: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background: #2a5298;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #ffcc00;
+            cursor: pointer;
+            transform: scale(1.1);
+            transition: all 0.3s ease;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #3c7b9e;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #5f87a2;
+        }
+
+        tr:hover {
+            background-color: #4c6b89;
+            cursor: pointer;
+            transform: scale(1.02);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            background: #ffcc00;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .pagination button:hover {
+            background: #ff8000;
+            transform: scale(1.05);
+            transition: all 0.3s ease-in-out;
+        }
+
+        #page-info {
+            font-size: 1.2rem;
+            margin: auto;
+            padding: 5px;
+            color: #fff;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .modal-content img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        /* Hover animation on table rows */
+        tr:hover {
+            transform: scale(1.02);
+            background-color: #6c7c8e;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Keyframes for animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h2 data-aos="fade-up" data-aos-duration="1000">Highest Individual Scores</h2>
+
+    <div class="search-filters">
+        <label>Format:</label>
+        <select id="format">
+            <option value="">All</option>
+            <option value="ODI">ODI</option>
+            <option value="T20">T20</option>
+            <option value="Test">Test</option>
+        </select>
+
+        <label>Year:</label>
+        <input type="number" id="year" min="1900" max="2100" style="width: 100px;">
+
+        <label>Player:</label>
+        <input type="text" id="player" placeholder="e.g. Virat Kohli">
+
+        <button onclick="loadData()">Search</button>
+    </div>
+
+    <table id="results" data-aos="fade-up" data-aos-duration="1000">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Country</th>
+                <th>Score</th>
+                <th>Match Format</th>
+                <th>Year</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="pagination" data-aos="fade-up" data-aos-duration="1000">
+        <button onclick="prevPage()">Previous</button>
+        <span id="page-info"></span>
+        <button onclick="nextPage()">Next</button>
+    </div>
+
+    <!-- Modal for Player Details -->
+    <div class="modal" id="playerModal">
+        <div class="modal-content">
+            <h3>Player Details</h3>
+            <img src="" id="playerImage" alt="Player Image">
+            <p id="playerDetails"></p>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let nextUrl = null;
+        let prevUrl = null;
+
+        // Initialize AOS
+        AOS.init();
+
+        function buildURL(page = 1) {
+            const format = document.getElementById("format").value;
+            const year = document.getElementById("year").value;
+            const player = document.getElementById("player").value;
+
+            let url = `/api/highest-scores/?page=${page}`;
+            if (format) url += `&format=${format}`;
+            if (year) url += `&year=${year}`;
+            if (player) url += `&player=${player}`;
+            return url;
+        }
+
+        function loadData(page = 1) {
+            const url = buildURL(page);
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector("#results tbody");
+                    tbody.innerHTML = "";
+
+                    data.results.forEach(row => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td onclick="showPlayerDetails('${row.player__name}')">${row.player__name}</td>
+                            <td>${row.player__country__name}</td>
+                            <td>${row.score}</td>
+                            <td>${row.format}</td>
+                            <td>${row.year}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+
+                    nextUrl = data.next;
+                    prevUrl = data.previous;
+                    currentPage = page;
+                    document.getElementById("page-info").innerText = `Page ${currentPage}`;
+                });
+        }
+
+        function nextPage() {
+            if (nextUrl) loadData(currentPage + 1);
+        }
+
+        function prevPage() {
+            if (prevUrl && currentPage > 1) loadData(currentPage - 1);
+        }
+
+        function showPlayerDetails(playerName) {
+            // Display modal with player details
+            document.getElementById('playerModal').style.display = 'flex';
+            document.getElementById('playerImage').src = `https://example.com/player_images/${playerName}.jpg`; // replace with actual URL
+            document.getElementById('playerDetails').innerText = `Details of ${playerName}.`; // Populate with actual player data
+        }
+
+        function closeModal() {
+            document.getElementById('playerModal').style.display = 'none';
+        }
+
+        // Load first page on start
+        loadData();
+    </script>
+
+</body>
+</html>
