@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Home | CrickStats{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+  <h1>Welcome to CrickStats</h1>
+  <p class="lead">Explore player stats, records, teams, rankings, and more!</p>
+</div>
+
+<div class="row text-center">
+  <div class="col-md-4 mb-3">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Records</h5>
+        <p class="card-text">View top scorers, highest wickets, and match-breaking performances.</p>
+        <a href="{% url 'records-home' %}" class="btn btn-primary">View</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Players</h5>
+        <p class="card-text">Browse all international player profiles and career stats.</p>
+        <a href="{% url 'players-home' %}" class="btn btn-primary">View</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Teams</h5>
+        <p class="card-text">Explore all national teams and squad members.</p>
+        <a href="{% url 'teams-home' %}" class="btn btn-primary">View</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

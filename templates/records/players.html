@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Players | CrickStats{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="text-center mb-4 text-primary">Explore Players</h2>
+
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for player in players %}
+      <div class="col">
+        <div class="card h-100 shadow">
+          <div class="card-body">
+            <h5 class="card-title">{{ player.name }}</h5>
+            <p class="card-text">{{ player.role }} | {{ player.country.name }}</p>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-center text-muted">No players found.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
