@@ -32,7 +32,7 @@ class Player(models.Model):
 
 class Record(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)  # New field
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True, null=True)  # New field
     runs = models.PositiveIntegerField()
     wickets = models.PositiveIntegerField(default=0)
     is_not_out = models.BooleanField(default=False)
