@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Player, Team, Match, Record
+from .models import Player, Team, Record
 
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:

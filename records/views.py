@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Sum, Max
-from .models import Player, News, Ranking, Team, Record, Match
+from .models import Player, News, Ranking, Team, Record
 
 
 def home(request):
