@@ -15,4 +15,4 @@ class PlayerAdmin(admin.ModelAdmin):
 
 @admin.register(Record)
 class RecordAdmin(admin.ModelAdmin):
-    list_display = ['id', 'player', 'match', 'runs', 'wickets', 'is_not_out']
+    list_display = ['id', 'player','runs', 'wickets']
