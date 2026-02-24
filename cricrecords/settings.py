@@ -27,7 +27,11 @@ SECRET_KEY = 'django-insecure-y7r0cgb*kb@8sayn5yoo7sxl=tevgz%3vw44mkb*dm3bs(ld-8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['crickstats.onrender.com', 'yourdomain.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['crickstats.duckdns.org', 'yourdomain.com', 'localhost', '127.0.0.1', '13.51.106.252']
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://crickstats.duckdns.org",
+]
 
 # Application definition
 
@@ -40,9 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'records',
     'rest_framework',
-    'storages',
-    'cloudinary',
-    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -89,7 +90,9 @@ REST_FRAMEWORK = {
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-        'default': dj_database_url.config()
+    'default': dj_database_url.config(
+        default='postgres://crickuser:StrongPass123!@localhost:5432/crickstats_db'
+    )
 }
 
 
@@ -140,11 +143,4 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Cloudinary configuration
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': config('CLOUDINARY_API_KEY'),
-    'API_SECRET': config('CLOUDINARY_API_SECRET'),
-}
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
