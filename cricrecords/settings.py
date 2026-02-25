@@ -89,11 +89,21 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default='postgres://crickuser:StrongPass123!@localhost:5432/crickstats_db'
-    )
-}
+if os.environ.get("CI") == "true":
+    # Use SQLite for CI/tests
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    # Use Postgres for production/dev
+    DATABASES = {
+        "default": dj_database_url.config(
+            default="postgres://crickuser:StrongPass123!@localhost:5432/crickstats_db"
+        )
+    }
 
 
 # Password validation
