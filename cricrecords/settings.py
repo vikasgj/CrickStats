@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-y7r0cgb*kb@8sayn5yoo7sxl=tevgz%3vw44mkb*dm3bs(ld-8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['crickstats.duckdns.org', 'yourdomain.com', 'localhost', '127.0.0.1', '13.51.106.252']
+ALLOWED_HOSTS = ['crickstats.duckdns.org', 'yourdomain.com', 'localhost', '127.0.0.1', '13.49.74.48']
 
 CSRF_TRUSTED_ORIGINS = [
     "https://crickstats.duckdns.org",
